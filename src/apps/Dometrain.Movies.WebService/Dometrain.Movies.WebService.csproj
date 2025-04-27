@@ -7,12 +7,11 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="9.0.4"/>
+        <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="9.0.4" />
     </ItemGroup>
 
     <ItemGroup>
       <ProjectReference Include="..\..\shared\Dometrain.Movies.Application\Dometrain.Movies.Application.csproj" />
-      <ProjectReference Include="..\..\shared\Dometrain.Movies.Contracts\Dometrain.Movies.Contracts.csproj" />
     </ItemGroup>
 
 </Project>
