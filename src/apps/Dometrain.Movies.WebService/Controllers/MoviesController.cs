@@ -24,5 +24,24 @@ namespace Dometrain.Movies.WebService.Controllers
             };
             return Ok(moviesResponse);
         }
+        
+        [HttpGet("{id:guid}")]
+        public async Task<IActionResult> GetByIdAsync(Guid id, IMoviesRepository moviesRepository, CancellationToken ct = default)
+        {
+            var movie = await moviesRepository.GetByIdAsync(id, ct);
+            if (movie is null)
+            {
+                return NotFound();
+            }
+
+            var moviesResponse = new MovieResponse
+            {
+                Genres = movie.Genres,
+                Id = movie.Id,
+                Title = movie.Title,
+                YearOfRelease = movie.YearOfRelease,
+            };
+            return Ok(moviesResponse);
+        }
     }
 }
