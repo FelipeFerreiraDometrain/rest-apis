@@ -1,6 +1,6 @@
 @HostAddress = https://localhost:7212
 
-GET {{HostAddress}}/movies
+GET {{HostAddress}}/api/movies
 Accept: application/json
 
 ###
