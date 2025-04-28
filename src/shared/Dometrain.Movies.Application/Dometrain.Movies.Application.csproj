@@ -7,8 +7,8 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\..\adapters\Dometrain.Movies.InMemoryDataStore\Dometrain.Movies.InMemoryDataStore.csproj" />
       <ProjectReference Include="..\Dometrain.Movies.ApplicationAbstractions\Dometrain.Movies.ApplicationAbstractions.csproj" />
-      <ProjectReference Include="..\Dometrain.Movies.Contracts\Dometrain.Movies.Contracts.csproj" />
     </ItemGroup>
 
 </Project>
