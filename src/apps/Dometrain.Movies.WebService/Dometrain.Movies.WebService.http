@@ -1,6 +1,6 @@
-@Dometrain.Movies.WebService_HostAddress = http://localhost:5283
+@HostAddress = https://localhost:7212
 
-GET {{Dometrain.Movies.WebService_HostAddress}}/weatherforecast/
+GET {{HostAddress}}/movies
 Accept: application/json
 
 ###

@@ -1,5 +1,7 @@
 using Dometrain.Movies.ApplicationAbstractions;
 using Dometrain.Movies.InMemoryDataStore.Context;
+using Dometrain.Movies.WebService.Contracts.Response;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -25,26 +27,18 @@ var summaries = new[]
     "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
 };
 
-app.MapGet("/weatherforecast", async (AppDbContext appContext, IMoviesRepository moviesRepository, CancellationToken ct = default) =>
+app.MapGet("/movies", async (IMoviesRepository moviesRepository, CancellationToken ct = default) =>
     {
         var allMovies = await moviesRepository.GetAllAsync(ct);
-        var titanic = new Dometrain.Movies.Domain.Movie
-        {
-            Genres = new List<string> { "Drama", "Romance" },
-            Title = "Titanic",
-            YearOfRelease = 1997,
-        };
-        await moviesRepository.CreateAsync(titanic, ct);
-        await appContext.SaveChangesAsync(ct);
-        var forecast = Enumerable.Range(1, 5).Select(index =>
-                new WeatherForecast
-                (
-                    DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-                    Random.Shared.Next(-20, 55),
-                    summaries[Random.Shared.Next(summaries.Length)]
-                ))
-            .ToArray();
-        return forecast;
+        return Results.Ok(new MoviesResponse { 
+            Items = allMovies.Select(movie => new MovieResponse
+            {
+                Genres = movie.Genres,
+                Id = movie.Id,
+                Title = movie.Title,
+                YearOfRelease = movie.YearOfRelease,
+            }
+        )});
     })
     .WithName("GetWeatherForecast");
 
