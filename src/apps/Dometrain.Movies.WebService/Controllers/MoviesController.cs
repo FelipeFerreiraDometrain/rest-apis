@@ -1,5 +1,8 @@
 ﻿using Dometrain.Movies.ApplicationAbstractions;
+using Dometrain.Movies.InMemoryDataStore.Context;
+using Dometrain.Movies.WebService.Contracts.Requests;
 using Dometrain.Movies.WebService.Contracts.Response;
+using Dometrain.Movies.WebService.Mapping;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Dometrain.Movies.WebService.Controllers
@@ -8,40 +11,46 @@ namespace Dometrain.Movies.WebService.Controllers
     [Route("api/[controller]")]
     public class MoviesController : ControllerBase
     {
-        [HttpGet]
-        public async Task<IActionResult> GetAllMoviesAsync(IMoviesRepository moviesRepository, CancellationToken ct = default)
+        [HttpPost]
+        public async Task<IActionResult> CreateMovieAsync(AppDbContext dbContext, IMoviesRepository moviesRepository, CreateMovieRequest movieRequest, CancellationToken cancellationToken = default)
         {
-            var allMovies = await moviesRepository.GetAllAsync(ct);
+            var movie = movieRequest.ToMovie();
+            await moviesRepository.CreateAsync(movie, cancellationToken);
+            await dbContext.SaveChangesAsync(cancellationToken);
+            return Created($"/api/movies/{movie.Id}", movie.Id);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetAllMoviesAsync(IMoviesRepository moviesRepository, CancellationToken cancellationToken = default)
+        {
+            var allMovies = await moviesRepository.GetAllAsync(cancellationToken);
             var moviesResponse = new MoviesResponse
             {
-                Items = allMovies.Select(movie => new MovieResponse
-                {
-                    Genres = movie.Genres,
-                    Id = movie.Id,
-                    Title = movie.Title,
-                    YearOfRelease = movie.YearOfRelease,
-                })
+                Items = allMovies.Select(ContractMapping.ToMovieResponse)
             };
             return Ok(moviesResponse);
         }
         
         [HttpGet("{id:guid}")]
-        public async Task<IActionResult> GetByIdAsync(Guid id, IMoviesRepository moviesRepository, CancellationToken ct = default)
+        public async Task<IActionResult> GetMovieByIdAsync(Guid id, IMoviesRepository moviesRepository, CancellationToken cancellationToken = default)
         {
-            var movie = await moviesRepository.GetByIdAsync(id, ct);
+            var movie = await moviesRepository.GetByIdAsync(id, cancellationToken);
             if (movie is null)
             {
                 return NotFound();
             }
 
-            var moviesResponse = new MovieResponse
-            {
-                Genres = movie.Genres,
-                Id = movie.Id,
-                Title = movie.Title,
-                YearOfRelease = movie.YearOfRelease,
-            };
+            var moviesResponse = movie.ToMovieResponse();
             return Ok(moviesResponse);
+        }
+
+
+        [HttpDelete("{id:guid}")]
+        public async Task<IActionResult> DeleteMovieByIdAsync(AppDbContext dbContext, IMoviesRepository moviesRepository, Guid id, CancellationToken cancellationToken = default)
+        {
+            await moviesRepository.DeleteAsync(id, cancellationToken);
+            await dbContext.SaveChangesAsync(cancellationToken);
+            return Accepted();
         }
     }
 }
