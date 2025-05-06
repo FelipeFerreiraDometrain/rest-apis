@@ -11,4 +11,8 @@
       <ProjectReference Include="..\Dometrain.Movies.ApplicationAbstractions\Dometrain.Movies.ApplicationAbstractions.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="Commands\" />
+    </ItemGroup>
+
 </Project>
