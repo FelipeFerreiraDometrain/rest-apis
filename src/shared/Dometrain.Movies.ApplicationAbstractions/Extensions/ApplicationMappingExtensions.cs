@@ -1,6 +1,6 @@
-using ApplicationModel = Dometrain.Movies.Application.Models;
+using ApplicationModel = Dometrain.Movies.ApplicationAbstractions.Models;
 
-namespace Dometrain.Movies.Application.Bootstrap;
+namespace Dometrain.Movies.ApplicationAbstractions.Extensions;
 
 public static class ApplicationMappingExtensions
 {

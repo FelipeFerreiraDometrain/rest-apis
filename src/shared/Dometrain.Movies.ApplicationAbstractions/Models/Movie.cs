@@ -1,4 +1,4 @@
-namespace Dometrain.Movies.Application.Models;
+namespace Dometrain.Movies.ApplicationAbstractions.Models;
 
 public record Movie(
     Guid Id,

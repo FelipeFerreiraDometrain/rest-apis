@@ -1,9 +1,10 @@
 using Dometrain.Movies.ApplicationAbstractions;
+using Dometrain.Movies.ApplicationAbstractions.Commands.Movies;
 using Dometrain.Movies.InMemoryDataStore.Context;
 
 namespace Dometrain.Movies.Application.Queries.Movies;
 
-public class DeleteMovieHandler
+public class DeleteMovieHandler : IDeleteMovieHandler
 {
     private readonly AppDbContext _dbContext;
     private readonly IMoviesRepository _moviesRepository;

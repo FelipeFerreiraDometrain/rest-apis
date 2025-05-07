@@ -1,6 +1,6 @@
 ﻿using Dometrain.Movies.WebService.Contracts.Requests;
 using Dometrain.Movies.WebService.Contracts.Response;
-using ApplicationModel = Dometrain.Movies.Application.Models;
+using ApplicationModel = Dometrain.Movies.ApplicationAbstractions.Models;
 
 namespace Dometrain.Movies.WebService.Mapping
 {
