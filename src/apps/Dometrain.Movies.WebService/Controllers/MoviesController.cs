@@ -1,4 +1,4 @@
-﻿using Dometrain.Movies.Application.Exceptions;
+using Dometrain.Movies.Application.Exceptions;
 using Dometrain.Movies.ApplicationAbstractions.Commands.Movies;
 using Dometrain.Movies.ApplicationAbstractions.Queries.Movies;
 using Dometrain.Movies.WebService.Contracts.Requests;
@@ -13,7 +13,6 @@ namespace Dometrain.Movies.WebService.Controllers
     public class MoviesController : ControllerBase
     {
         private readonly ILogger<MoviesController> _logger;
-        
         public MoviesController(ILogger<MoviesController> logger)
         {
             _logger = logger;
