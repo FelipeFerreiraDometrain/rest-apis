@@ -39,13 +39,9 @@ namespace Dometrain.Movies.InMemoryDataStore.Services
                 cancellationToken);
         }
 
-        public async Task DeleteAsync(Guid id, CancellationToken cancellationToken = default)
+        public async Task DeleteAsync(Movie movie, CancellationToken cancellationToken = default)
         {
-            var movie = await GetByIdAsync(id, cancellationToken);
-            if (movie is not null)
-            {
-                _appContext.Movies.Remove(movie);
-            }
+            _appContext.Movies.Remove(movie);
         }
     }
 }

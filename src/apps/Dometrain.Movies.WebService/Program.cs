@@ -13,6 +13,7 @@ namespace Dometrain.Movies.WebService
             builder.Services.AddSwaggerGen();
             builder.Services.AddApplicationServices();
             builder.Services.AddControllers();
+            builder.Services.AddProblemDetails();
 
             var app = builder.Build();
 
@@ -26,6 +27,7 @@ namespace Dometrain.Movies.WebService
 
             app.UseHttpsRedirection();
             app.UseDeveloperExceptionPage();
+            app.UseStatusCodePages();
 
             app.MapControllers();
             await app.RunAsync();

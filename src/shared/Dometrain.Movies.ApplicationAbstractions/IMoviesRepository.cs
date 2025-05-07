@@ -11,5 +11,5 @@ public interface IMoviesRepository
 
     Task UpdateAsync(Movie movie, CancellationToken cancellationToken = default);
 
-    Task DeleteAsync(Guid id, CancellationToken cancellationToken = default);
+    Task DeleteAsync(Movie movie, CancellationToken cancellationToken = default);
 }

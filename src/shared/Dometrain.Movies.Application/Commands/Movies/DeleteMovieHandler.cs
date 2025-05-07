@@ -1,3 +1,4 @@
+using Dometrain.Movies.Application.Exceptions;
 using Dometrain.Movies.ApplicationAbstractions;
 using Dometrain.Movies.ApplicationAbstractions.Commands.Movies;
 using Dometrain.Movies.InMemoryDataStore.Context;
@@ -17,9 +18,12 @@ public class DeleteMovieHandler : IDeleteMovieHandler
 
     public async Task HandleAsync(Guid id, CancellationToken cancellationToken = default)
     {
-        // TODO - locate movie...
-        await _moviesRepository.DeleteAsync(id, cancellationToken);
-        // send movie ref to delete...
+        var movie = await _moviesRepository.GetByIdAsync(id, cancellationToken);
+        if (movie is null)
+        {
+            throw new NotFoundException();
+        }
+        await _moviesRepository.DeleteAsync(movie, cancellationToken);
         await _dbContext.SaveChangesAsync(cancellationToken);
     }
 }
