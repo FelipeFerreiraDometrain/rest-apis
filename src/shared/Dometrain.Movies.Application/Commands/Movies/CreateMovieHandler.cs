@@ -1,11 +1,12 @@
 using Dometrain.Movies.ApplicationAbstractions;
+using Dometrain.Movies.ApplicationAbstractions.Commands.Movies;
 using Dometrain.Movies.InMemoryDataStore.Context;
-using Dometrain.Movies.Application.Bootstrap;
-using ApplicationModel = Dometrain.Movies.Application.Models;
+using ApplicationModel = Dometrain.Movies.ApplicationAbstractions.Models;
+using Dometrain.Movies.ApplicationAbstractions.Extensions;
 
 namespace Dometrain.Movies.Application.Queries.Movies;
 
-public class CreateMovieHandler
+public class CreateMovieHandler : ICreateMovieHandler
 {
     private readonly AppDbContext _dbContext;
     private readonly IMoviesRepository _moviesRepository;

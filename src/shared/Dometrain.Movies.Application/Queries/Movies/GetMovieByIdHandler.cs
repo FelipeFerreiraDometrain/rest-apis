@@ -1,10 +1,11 @@
 using Dometrain.Movies.ApplicationAbstractions;
-using ApplicationModel = Dometrain.Movies.Application.Models;
-using Dometrain.Movies.Application.Bootstrap;
+using ApplicationModel = Dometrain.Movies.ApplicationAbstractions.Models;
+using Dometrain.Movies.ApplicationAbstractions.Extensions;
+using Dometrain.Movies.ApplicationAbstractions.Queries.Movies;
 
 namespace Dometrain.Movies.Application.Queries.Movies;
 
-public class GetMovieByIdHandler
+public class GetMovieByIdHandler : IGetMovieByIdHandler
 {
     private readonly IMoviesRepository _moviesRepository;
     public GetMovieByIdHandler(IMoviesRepository moviesRepository)
