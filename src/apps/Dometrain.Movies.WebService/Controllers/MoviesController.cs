@@ -1,4 +1,5 @@
-﻿using Dometrain.Movies.ApplicationAbstractions.Commands.Movies;
+using Dometrain.Movies.Application.Exceptions;
+using Dometrain.Movies.ApplicationAbstractions.Commands.Movies;
 using Dometrain.Movies.ApplicationAbstractions.Queries.Movies;
 using Dometrain.Movies.WebService.Contracts.Requests;
 using Dometrain.Movies.WebService.Contracts.Response;
@@ -11,6 +12,12 @@ namespace Dometrain.Movies.WebService.Controllers
     [Route("api/[controller]")]
     public class MoviesController : ControllerBase
     {
+        private readonly ILogger<MoviesController> _logger;
+        public MoviesController(ILogger<MoviesController> logger)
+        {
+            _logger = logger;
+        }
+        
         [HttpPost]
         public async Task<IActionResult> CreateMovieAsync(ICreateMovieHandler handler, CreateMovieRequest movieRequest, CancellationToken cancellationToken = default)
         {
@@ -33,23 +40,31 @@ namespace Dometrain.Movies.WebService.Controllers
         [HttpGet("{id:guid}")]
         public async Task<IActionResult> GetMovieByIdAsync(IGetMovieByIdHandler handler, Guid id, CancellationToken cancellationToken = default)
         {
-            var movie = await handler.HandleAsync(id, cancellationToken);
-            // TODO - exception handler here...
-            if (movie is null)
+            try
+            {
+                var movie = await handler.HandleAsync(id, cancellationToken);
+                var moviesResponse = movie.ToMovieResponse();
+                return Ok(moviesResponse);
+            }
+            catch (NotFoundException e)
             {
                 return NotFound();
             }
-
-            var moviesResponse = movie.ToMovieResponse();
-            return Ok(moviesResponse);
         }
 
 
         [HttpDelete("{id:guid}")]
         public async Task<IActionResult> DeleteMovieByIdAsync(IDeleteMovieHandler handler, Guid id, CancellationToken cancellationToken = default)
         {
-            await handler.HandleAsync(id, cancellationToken);
-            return Accepted();
+            try
+            {
+                await handler.HandleAsync(id, cancellationToken);
+            }
+            catch (NotFoundException e)
+            {
+                _logger.LogInformation(e, "Could not find Movie in store by id: '{id}'", id);
+            }
+            return NoContent();
         }
     }
 }

@@ -1,3 +1,4 @@
+using Dometrain.Movies.Application.Exceptions;
 using Dometrain.Movies.ApplicationAbstractions;
 using ApplicationModel = Dometrain.Movies.ApplicationAbstractions.Models;
 using Dometrain.Movies.ApplicationAbstractions.Extensions;
@@ -18,7 +19,7 @@ public class GetMovieByIdHandler : IGetMovieByIdHandler
         var movie = await _moviesRepository.GetByIdAsync(id, cancellationToken);
         if (movie is null)
         {
-            throw new Exception("Not Found");
+            throw new NotFoundException();
         }
 
         return movie.ToApplicationModel();
