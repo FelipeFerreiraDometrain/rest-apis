@@ -13,6 +13,7 @@ namespace Microsoft.Extensions.DependencyInjection
                 .AddScoped<ICreateMovieHandler, CreateMovieHandler>()
                 .AddScoped<IGetAllMoviesHandler, GetAllMoviesHandler>()
                 .AddScoped<IGetMovieByIdHandler, GetMovieByIdHandler>()
+                .AddScoped<IUpdateMovieHandler, UpdateMovieHandler>()
                 .AddScoped<IDeleteMovieHandler, DeleteMovieHandler>();
         }
     }
