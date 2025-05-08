@@ -13,10 +13,17 @@ namespace Dometrain.Movies.WebService
             builder.Services.AddSwaggerGen();
             builder.Services.AddApplicationServices();
             builder.Services.AddControllers();
-            builder.Services.AddProblemDetails();
 
             var app = builder.Build();
-
+            // temporary
+            app.Use(async (context, next) =>
+            {
+                var loggingFactory = context.RequestServices.GetRequiredService<ILoggerFactory>();
+                var logger = loggingFactory.CreateLogger("middleware");
+                var endpoint = context.GetEndpoint();
+                logger.LogInformation(endpoint?.DisplayName);
+                await next();
+            });
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
             {
@@ -27,8 +34,6 @@ namespace Dometrain.Movies.WebService
 
             app.UseHttpsRedirection();
             app.UseDeveloperExceptionPage();
-            app.UseStatusCodePages();
-
             app.MapControllers();
             await app.RunAsync();
     

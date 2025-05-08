@@ -33,10 +33,12 @@ namespace Dometrain.Movies.InMemoryDataStore.Services
         public async Task UpdateAsync(Movie movie, CancellationToken cancellationToken = default)
         {
             await _appContext.Movies
-                .ExecuteUpdateAsync(m => m
-                    .SetProperty(movie => movie.Title, "updated title")
-                    .SetProperty(movie => movie.Genres, Enumerable.Empty<string>()),
-                cancellationToken);
+                .Where(m => m.Id == movie.Id)
+                    .ExecuteUpdateAsync(setters => setters
+                            .SetProperty(m => m.Title, movie.Title)
+                            .SetProperty(m => m.YearOfRelease, movie.YearOfRelease)
+                            .SetProperty(m => m.Genres, movie.Genres),
+                        cancellationToken);
         }
 
         public async Task DeleteAsync(Movie movie, CancellationToken cancellationToken = default)

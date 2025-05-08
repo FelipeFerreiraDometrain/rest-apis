@@ -7,12 +7,17 @@ namespace Dometrain.Movies.WebService.Mapping
     public static class ContractMapping
     {
 
-        public static ApplicationModel.Movie ToApplicationModel(this CreateMovieRequest movie)
+        public static ApplicationModel.Movie ToApplication(this CreateMovieRequest movie)
         {
             return new ApplicationModel.Movie(Guid.Empty, movie.Title, movie.YearOfRelease, movie.Genres);
         }
         
-        public static MovieResponse ToMovieResponse(this ApplicationModel.Movie movie)
+        public static ApplicationModel.Movie ToApplication(this UpdateMovieRequest movie, Guid id)
+        {
+            return new ApplicationModel.Movie(id, movie.Title, movie.YearOfRelease, movie.Genres);
+        }
+        
+        public static MovieResponse ToResponse(this ApplicationModel.Movie movie)
         {
             return new MovieResponse
             {
