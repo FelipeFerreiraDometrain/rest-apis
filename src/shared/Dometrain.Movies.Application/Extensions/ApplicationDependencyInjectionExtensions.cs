@@ -12,6 +12,7 @@ namespace Microsoft.Extensions.DependencyInjection
                 .AddInMemoryDataStore()
                 .AddScoped<ICreateMovieHandler, CreateMovieHandler>()
                 .AddScoped<IGetAllMoviesHandler, GetAllMoviesHandler>()
+                .AddScoped<IGetMovieBySlugHandler, GetMovieBySlugHandler>()
                 .AddScoped<IGetMovieByIdHandler, GetMovieByIdHandler>()
                 .AddScoped<IUpdateMovieHandler, UpdateMovieHandler>()
                 .AddScoped<IDeleteMovieHandler, DeleteMovieHandler>();
