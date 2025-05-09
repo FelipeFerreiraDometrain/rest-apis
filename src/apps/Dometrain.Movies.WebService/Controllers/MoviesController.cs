@@ -53,6 +53,23 @@ namespace Dometrain.Movies.WebService.Controllers
         }
         
         
+        [ActionName(nameof(GetMovieBySlugAsync))]
+        [HttpGet(ApiEndpoints.Movies.Get)]
+        public async Task<IActionResult> GetMovieBySlugAsync([FromServices] IGetMovieBySlugHandler handler, [FromRoute] string slug, CancellationToken cancellationToken = default)
+        {
+            try
+            {
+                var movie = await handler.HandleAsync(slug, cancellationToken);
+                var moviesResponse = movie.ToResponse();
+                return Ok(moviesResponse);
+            }
+            catch (NotFoundException e)
+            {
+                return NotFound();
+            }
+        }
+        
+        
         [HttpPut(ApiEndpoints.Movies.Update)]
         public async Task<IActionResult> UpdateMovieByIdAsync([FromServices] IUpdateMovieHandler handler, [FromRoute] Guid id, [FromBody] UpdateMovieRequest request, CancellationToken cancellationToken = default)
         {
