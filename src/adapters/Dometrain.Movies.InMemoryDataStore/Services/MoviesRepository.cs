@@ -29,6 +29,11 @@ namespace Dometrain.Movies.InMemoryDataStore.Services
         {
             return await _appContext.Movies.FirstOrDefaultAsync(m => m.Id.Equals(id), cancellationToken);
         }
+        
+        public async Task<Movie?> GetBySlugAsync(string slug, CancellationToken cancellationToken = default)
+        {
+            return await _appContext.Movies.FirstOrDefaultAsync(m => m.Slug.Equals(slug), cancellationToken);
+        }
 
         public async Task UpdateAsync(Movie movie, CancellationToken cancellationToken = default)
         {

@@ -22,7 +22,7 @@ namespace Dometrain.Movies.WebService.Controllers
         {
             var appModel = movieRequest.ToApplication();
             var id = await handler.HandleAsync(appModel, cancellationToken);
-            return CreatedAtAction(nameof(GetMovieByIdAsync), new { id = id }, id);
+            return CreatedAtAction(nameof(GetMovieByIdOrSlugAsync), new { idOrSlug = id }, id);
         }
 
         [HttpGet(ApiEndpoints.Movies.GetAll)]
@@ -36,34 +36,25 @@ namespace Dometrain.Movies.WebService.Controllers
             return Ok(moviesResponse);
         }
         
-        [ActionName(nameof(GetMovieByIdAsync))]
-        [HttpGet(ApiEndpoints.Movies.Get)]
-        public async Task<IActionResult> GetMovieByIdAsync([FromServices] IGetMovieByIdHandler handler, [FromRoute] Guid id, CancellationToken cancellationToken = default)
+        
+        [ActionName(nameof(GetMovieByIdOrSlugAsync))]
+        [HttpGet(ApiEndpoints.Movies.GetByIdOrSlug)]
+        public async Task<IActionResult> GetMovieByIdOrSlugAsync([FromServices] IGetMovieBySlugHandler getBySlugHandler, [FromServices] IGetMovieByIdHandler getByIdHandler, [FromRoute] string idOrSlug, CancellationToken cancellationToken = default)
         {
             try
             {
-                var movie = await handler.HandleAsync(id, cancellationToken);
-                var moviesResponse = movie.ToResponse();
-                return Ok(moviesResponse);
+                ApplicationAbstractions.Models.Movie movie;
+                if (Guid.TryParse(idOrSlug, out var id))
+                {
+                    movie = await getByIdHandler.HandleAsync(id, cancellationToken);
+                }
+                else
+                {
+                    movie = await getBySlugHandler.HandleAsync(idOrSlug, cancellationToken);
+                }
+                return Ok(movie.ToResponse());
             }
-            catch (NotFoundException e)
-            {
-                return NotFound();
-            }
-        }
-        
-        
-        [ActionName(nameof(GetMovieBySlugAsync))]
-        [HttpGet(ApiEndpoints.Movies.Get)]
-        public async Task<IActionResult> GetMovieBySlugAsync([FromServices] IGetMovieBySlugHandler handler, [FromRoute] string slug, CancellationToken cancellationToken = default)
-        {
-            try
-            {
-                var movie = await handler.HandleAsync(slug, cancellationToken);
-                var moviesResponse = movie.ToResponse();
-                return Ok(moviesResponse);
-            }
-            catch (NotFoundException e)
+            catch (NotFoundException)
             {
                 return NotFound();
             }
@@ -79,7 +70,7 @@ namespace Dometrain.Movies.WebService.Controllers
                 await handler.HandleAsync(movie, cancellationToken);
                 return NoContent();
             }
-            catch (NotFoundException e)
+            catch (NotFoundException)
             {
                 return NotFound();
             }
@@ -93,9 +84,9 @@ namespace Dometrain.Movies.WebService.Controllers
             {
                 await handler.HandleAsync(id, cancellationToken);
             }
-            catch (NotFoundException e)
+            catch (NotFoundException)
             {
-                _logger.LogInformation(e, "Could not find Movie in store by id: '{id}'", id);
+                _logger.LogInformation("Could not find Movie in store by id: '{id}'", id);
             }
             return NoContent();
         }
